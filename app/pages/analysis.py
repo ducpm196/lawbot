@@ -1930,42 +1930,39 @@ def save_comprehensive_evaluation_results(results, filename=None):
             },
         }
 
-        # SỬA: Use centralized report management
-        filepath = save_report(
-            report_type="comprehensive_evaluation",
-            data=save_data,
-            keep_latest_only=False  # Keep multiple evaluation reports
-        )
-
-        # Validate save_data can be serialized
+        # SỬA: Use centralized report management (no duplicate file writing)
         try:
-            json_str = json.dumps(save_data, ensure_ascii=False, indent=2)
-            logger.info(
-                f"✅ Data serialization successful, size: {len(json_str)} characters"
+            filepath = save_report(
+                report_type="comprehensive_evaluation",
+                data=save_data,
+                keep_latest_only=False  # Keep multiple evaluation reports
             )
+            
+            # SỬA: filepath is already a string from save_report, convert to Path for verification
+            from pathlib import Path
+            filepath_obj = Path(filepath)
+            
+            # Verify file was created
+            if filepath_obj.exists():
+                file_size = filepath_obj.stat().st_size
+                logger.info(f"✅ Comprehensive evaluation results saved to: {filepath}")
+                logger.info(f"📊 File size: {file_size} bytes")
+                return filepath
+            else:
+                logger.error(f"❌ File was not created: {filepath}")
+                return None
+                
         except Exception as e:
-            logger.error(f"❌ Data serialization failed: {e}")
-            return None
-
-        # Write to file
-        with open(filepath, "w", encoding="utf-8") as f:
-            f.write(json_str)
-
-        # Verify file was created
-        if filepath.exists():
-            file_size = filepath.stat().st_size
-            logger.info(f"✅ Comprehensive evaluation results saved to: {filepath}")
-            logger.info(f"📊 File size: {file_size} bytes")
-            return str(filepath)
-        else:
-            logger.error(f"❌ File was not created: {filepath}")
+            logger.error(f"❌ Failed to save using centralized management: {e}")
+            logger.error(f"❌ Exception type: {type(e).__name__}")
+            import traceback
+            logger.error(f"❌ Traceback: {traceback.format_exc()}")
             return None
 
     except Exception as e:
         logger.error(f"❌ Failed to save evaluation results: {e}")
         logger.error(f"❌ Exception type: {type(e).__name__}")
         import traceback
-
         logger.error(f"❌ Traceback: {traceback.format_exc()}")
         return None
 
