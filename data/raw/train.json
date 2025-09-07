@@ -1,0 +1,450 @@
+[
+  {
+    "qid": 8847,
+    "question": "Kích thước séc và việc bố trí vị trí các nội dung trên séc được quy định thế nào?",
+    "relevant_laws": [
+      1418
+    ]
+  },
+  {
+    "qid": 8602,
+    "question": "Yêu cầu đối với công chức dự thi nâng ngạch lên ngạch Kiểm soát viên chính ngân hàng như thế nào?",
+    "relevant_laws": [
+      4
+    ]
+  },
+  {
+    "qid": 6531,
+    "question": "Hóa đơn điện tử có sai sót thì phải xử lý như thế nào?",
+    "relevant_laws": [
+      1786
+    ]
+  },
+  {
+    "qid": 132,
+    "question": "Xin hỏi: Một tổ chức tín dụng đã được cấp Giấy phép nhưng sau hơn 1 năm, mà không tiến hành việc khai trương thì Ngân hàng nhà nước có thể thu hồi Giấy phép đó không?",
+    "relevant_laws": [
+      295
+    ]
+  },
+  {
+    "qid": 8616,
+    "question": "Điều kiện đối với trái phiếu đặc biệt làm cơ sở tái cấp vốn, gia hạn tái cấp vốn được quy định như thế nào?",
+    "relevant_laws": [
+      2089,
+      2083
+    ]
+  },
+  {
+    "qid": 6430,
+    "question": "Có bắt buộc phải lập hóa đơn mua bán hàng hóa dùng để khuyến mại, quảng cáo hay không?",
+    "relevant_laws": [
+      1771,
+      1779,
+      1777
+    ]
+  },
+  {
+    "qid": 8832,
+    "question": "Hồ sơ đề nghị cấp Giấy chứng nhận đủ điều kiện sản xuất vàng trang sức, mỹ nghệ được quy định như thế nào?",
+    "relevant_laws": [
+      503,
+      1443
+    ]
+  },
+  {
+    "qid": 8497,
+    "question": "Lực lượng tham gia vận chuyển và trách nhiệm của người áp tải tiền mặt, tài sản quý, giấy tờ có giá được quy định như thế nào?",
+    "relevant_laws": [
+      251
+    ]
+  },
+  {
+    "qid": 2627,
+    "question": "Mức xử phạt khi sử dụng bản phô tô chứng thực Giấy đăng ký xe ô tô thay bản gốc không đúng quy định pháp luật?",
+    "relevant_laws": [
+      1267,
+      1092
+    ]
+  },
+  {
+    "qid": 8711,
+    "question": "Nối mạng và quy trình báo cáo điện tử áp dụng đối với các tổ chức tín dụng, chi nhánh ngân hàng nước ngoài được quy định như thế nào?",
+    "relevant_laws": [
+      2106
+    ]
+  },
+  {
+    "qid": 8421,
+    "question": "Gương chiếu hậu xe máy có kích thước nhỏ hơn quy định có bị xử phạt không?",
+    "relevant_laws": [
+      1263,
+      1092
+    ]
+  },
+  {
+    "qid": 8725,
+    "question": "Phạm vi bảo lãnh tín dụng cho doanh nghiệp nhỏ và vừa được quy định như thế nào?",
+    "relevant_laws": [
+      2140
+    ]
+  },
+  {
+    "qid": 8575,
+    "question": "Giấy đề nghị mở tài khoản ngân hàng cho cá nhân được quy định như thế nào?",
+    "relevant_laws": [
+      1734,
+      1345
+    ]
+  },
+  {
+    "qid": 8461,
+    "question": "Nguyên tắc hỗ trợ lãi suất từ ngân sách nhà nước đối với khoản vay của doanh nghiệp, hợp tác xã, hộ kinh doanh được quy định như thế nào?",
+    "relevant_laws": [
+      156
+    ]
+  },
+  {
+    "qid": 8486,
+    "question": "Nghĩa vụ của bên được bảo lãnh trong bảo lãnh ngân hàng gồm những gì?",
+    "relevant_laws": [
+      42
+    ]
+  },
+  {
+    "qid": 4763,
+    "question": "Thanh toán khi mua nhà ở chung cư đang xây dựng chưa hoàn thành được quy định như thế nào?",
+    "relevant_laws": [
+      875
+    ]
+  },
+  {
+    "qid": 8462,
+    "question": "Hướng dẫn thủ tục nhận, chi trả tiền gửi tiết kiệm tại địa điểm giao dịch của ngân hàng thương mại?",
+    "relevant_laws": [
+      148
+    ]
+  },
+  {
+    "qid": 8488,
+    "question": "Hồ sơ đề nghị cấp Giấy phép tạm nhập vàng nguyên liệu để tái xuất sản phẩm gồm những tài liệu gì?",
+    "relevant_laws": [
+      573,
+      506,
+      615,
+      541
+    ]
+  },
+  {
+    "qid": 28,
+    "question": "Từ ngày 03/04/2023, giảm lãi suất tái cấp vốn của Ngân hàng nhà nước Việt Nam?",
+    "relevant_laws": [
+      782,
+      779
+    ]
+  },
+  {
+    "qid": 8887,
+    "question": "Các hình thức đầu tư gián tiếp nước ngoài tại Việt Nam của nhà đầu tư nước ngoài được quy định như thế nào?",
+    "relevant_laws": [
+      1509,
+      1135
+    ]
+  },
+  {
+    "qid": 8572,
+    "question": "Báo cáo công tác thi đua khen thưởng ngành ngân hàng như thế nào?",
+    "relevant_laws": [
+      99
+    ]
+  },
+  {
+    "qid": 20,
+    "question": "Thời hạn có giá trị của Giấy phép tạm nhập vàng nguyên liệu để tái xuất sản phẩm được xác định dựa vào đâu?",
+    "relevant_laws": [
+      541,
+      511
+    ]
+  },
+  {
+    "qid": 2459,
+    "question": "Nhân viên phục vụ xe khách thu tiền vé cao hơn giá niêm yết bị phạt bao nhiêu tiền?",
+    "relevant_laws": [
+      1277
+    ]
+  },
+  {
+    "qid": 8848,
+    "question": "Hoàn thành thanh toán hối phiếu nhận nợ được quy định như thế nào?",
+    "relevant_laws": [
+      1376,
+      1415
+    ]
+  },
+  {
+    "qid": 4611,
+    "question": "Khi chưa có Sổ hồng thì bên bán có được thu 96% giá trị hợp đồng với nhà ở hình thành trong tương lai không?",
+    "relevant_laws": [
+      875
+    ]
+  },
+  {
+    "qid": 4677,
+    "question": "Hành nghề môi giới bất động sản với tư cách cá nhân có phải kê khai nộp thuế?",
+    "relevant_laws": [
+      880
+    ]
+  },
+  {
+    "qid": 14199,
+    "question": "Các bên sử dụng thông tin hóa đơn điện tử bao gồm những ai?",
+    "relevant_laws": [
+      1813
+    ]
+  },
+  {
+    "qid": 8484,
+    "question": "Quyền của bên nhận bảo lãnh trong bảo lãnh ngân hàng?",
+    "relevant_laws": [
+      43
+    ]
+  },
+  {
+    "qid": 8623,
+    "question": "Trách nhiệm của Bộ Khoa học và Công nghệ đối với hoạt động tín dụng đầu tư của Nhà nước được quy định như thế nào?",
+    "relevant_laws": [
+      186
+    ]
+  },
+  {
+    "qid": 6453,
+    "question": "Trình tự thực hiện ngừng sử dụng hóa đơn điện tử ra sao?",
+    "relevant_laws": [
+      1783
+    ]
+  },
+  {
+    "qid": 8628,
+    "question": "Việc cung cấp thông tin trong hoạt động tín dụng được quy định như thế nào?",
+    "relevant_laws": [
+      282
+    ]
+  },
+  {
+    "qid": 4635,
+    "question": "Đất có sổ Hồng nhưng đang bị tranh chấp thì có được đưa vào kinh doanh?",
+    "relevant_laws": [
+      827
+    ]
+  },
+  {
+    "qid": 2496,
+    "question": "Điều khiển xe máy kéo chở vật liệu xây dựng làm rơi vãi xuống đường bị phạt bao nhiêu tiền?",
+    "relevant_laws": [
+      1266
+    ]
+  },
+  {
+    "qid": 10832,
+    "question": "Trưởng đoàn thanh tra chuyên ngành của Bộ Giao thông vận tải có được quyền xử phạt vi phạm hành chính với hành vi bịt mắt điều khiển xe máy không?",
+    "relevant_laws": [
+      1323,
+      1092,
+      1095
+    ]
+  },
+  {
+    "qid": 8660,
+    "question": "1. Thẩm quyền quyết định tiêu hủy tiền của ngân hàng nhà nước Việt Nam được quy định như thế nào?",
+    "relevant_laws": [
+      1524
+    ]
+  },
+  {
+    "qid": 62,
+    "question": "Các hoạt động kinh doanh ngoài hoạt động ngân hàng của công ty tài chính?",
+    "relevant_laws": [
+      373,
+      380
+    ]
+  },
+  {
+    "qid": 8459,
+    "question": "Quy định về ngạch Thủ kho, thủ quỹ ngân hàng như thế nào?",
+    "relevant_laws": [
+      6
+    ]
+  },
+  {
+    "qid": 48,
+    "question": "Ngân hàng Nhà nước Việt Nam có bao nhiêu chi nhánh trên cả nước?",
+    "relevant_laws": [
+      1242
+    ]
+  },
+  {
+    "qid": 6389,
+    "question": "Có được sử dụng phiếu giao hàng thay thế việc sử dụng hóa đơn điện tử khi giao hàng hóa? Sử dụng hóa đơn điện tử khi giao hàng được quy định thế nào?",
+    "relevant_laws": [
+      1780
+    ]
+  },
+  {
+    "qid": 4639,
+    "question": "Tổ chức kinh doanh dịch vụ môi giới bất động sản có những nghĩa vụ gì?",
+    "relevant_laws": [
+      885
+    ]
+  },
+  {
+    "qid": 8530,
+    "question": "Sáng kiến trong ngành Ngân hàng được quy định như thế nào?",
+    "relevant_laws": [
+      56
+    ]
+  },
+  {
+    "qid": 4510,
+    "question": "Thanh toán mua chung cư hình thành trong tương lai được quy định như thế nào?",
+    "relevant_laws": [
+      875
+    ]
+  },
+  {
+    "qid": 4792,
+    "question": "Bên bán có nghĩa vụ phải bảo hành nhà ở cho bên mua không?",
+    "relevant_laws": [
+      838
+    ]
+  },
+  {
+    "qid": 8831,
+    "question": "Hồ sơ đề nghị cấp Giấy phép kinh doanh mua, bán vàng miếng đối với doanh nghiệp được quy định như thế nào?",
+    "relevant_laws": [
+      1443,
+      504
+    ]
+  },
+  {
+    "qid": 6486,
+    "question": "Trách nhiệm của bên sử dụng thông tin hóa đơn điện tử là gì?",
+    "relevant_laws": [
+      1820
+    ]
+  },
+  {
+    "qid": 2335,
+    "question": "Bật xi nhan trái nhưng rẽ phải người điều khiển xe máy bị xử phạt hành chính bao nhiêu tiền?",
+    "relevant_laws": [
+      1092,
+      1251
+    ]
+  },
+  {
+    "qid": 4537,
+    "question": "Tổ chức kinh doanh dịch vụ môi giới bất động sản có được phép thuê doanh nghiệp dịch vụ môi giới khác thực hiện công việc môi giới không?",
+    "relevant_laws": [
+      884
+    ]
+  },
+  {
+    "qid": 8498,
+    "question": "Phương tiện vận chuyển tiền mặt, tài sản quý, giấy tờ có giá được quy định như thế nào?",
+    "relevant_laws": [
+      246
+    ]
+  },
+  {
+    "qid": 8515,
+    "question": "Trách nhiệm của Thủ kho tiền trong việc quản lý tiền mặt, tài sản quý, giấy tờ có giá và kho tiền của tổ chức tín dụng là gì?",
+    "relevant_laws": [
+      215
+    ]
+  },
+  {
+    "qid": 150,
+    "question": "Tỷ lệ sở hữu vốn góp của tổ chức tài chính vi mô được quy định như thế nào?",
+    "relevant_laws": [
+      700
+    ]
+  },
+  {
+    "qid": 1023,
+    "question": "Khi hoàn tất các thủ tục đăng ký kinh doanh, chi nhánh ngân hàng nước ngoài phải thực hiện công bố thông tin hoạt động trước bao nhiêu ngày?",
+    "relevant_laws": [
+      294
+    ]
+  },
+  {
+    "qid": 9,
+    "question": "Ai có thẩm quyền quyết định việc hỗ trợ từ ngân sách nhà nước đối với tổ chức bảo hiểm tiền gửi?",
+    "relevant_laws": [
+      484
+    ]
+  },
+  {
+    "qid": 151,
+    "question": "Thời hạn hiệu lực của văn bản chấp thuận danh sách dự kiến nhân sự tổ chức tài chính vi mô được quy định như thế nào?",
+    "relevant_laws": [
+      697
+    ]
+  },
+  {
+    "qid": 8745,
+    "question": "Chế độ báo cáo đối với Bên bảo lãnh cho vay nợ ra nước ngoài được quy định như thế nào?",
+    "relevant_laws": [
+      1680
+    ]
+  },
+  {
+    "qid": 2657,
+    "question": "Cá nhân không chấp hành thu hồi biển số xe sẽ bị xử phạt bao nhiêu tiền?",
+    "relevant_laws": [
+      1276
+    ]
+  },
+  {
+    "qid": 13961,
+    "question": "Tự ý mở chắn ngang đường sắt khi đã đóng chắn bị phạt bao nhiêu tiền?",
+    "relevant_laws": [
+      1295
+    ]
+  },
+  {
+    "qid": 8475,
+    "question": "Phí dịch vụ thẻ ngân hàng được quy định như thế nào?",
+    "relevant_laws": [
+      445
+    ]
+  },
+  {
+    "qid": 8511,
+    "question": "Chìa khóa cửa kho tiền của ngân hàng được bàn giao như thế nào?",
+    "relevant_laws": [
+      226
+    ]
+  },
+  {
+    "qid": 122,
+    "question": "Số dư bảo lãnh ngân hàng trong bảo lãnh nhà ở hình thành trong tương lai xác định ra sao?",
+    "relevant_laws": [
+      34,
+      24
+    ]
+  },
+  {
+    "qid": 4672,
+    "question": "Kinh doanh dịch vụ tư vấn bất động sản có phải thành lập doanh nghiệp không?",
+    "relevant_laws": [
+      892
+    ]
+  },
+  {
+    "qid": 8748,
+    "question": "Trình tự thực hiện thủ tục đăng ký khoản thu hồi nợ bảo lãnh được quy định như thế nào?",
+    "relevant_laws": [
+      1673,
+      1672
+    ]
+  }
+]

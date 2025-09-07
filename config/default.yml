@@ -1,0 +1,193 @@
+# Default Configuration for LawBot v8.3
+# =================================
+#
+# This file contains the default settings for the application. Paths are relative
+# to the project root and will be resolved at runtime.
+
+paths:
+  data_dir: "data"
+  raw_data_dir: "data/raw"
+  processed_data_dir: "features"
+  model_dir: "models"
+  reports_dir: "reports"
+  log_dir: "logs"
+  feature_dir: "features"
+  train_data_path: "data/raw/train.json"
+  test_data_path: "data/raw/public_test.json"
+  legal_corpus_path: "data/raw/legal_corpus.json"
+  faiss_index_path: "features/faiss_index.bin"
+  content_map_path: "features/aid_map.json"
+  index_to_aid_path: "features/index_to_aid.json"
+
+# Enhanced Bi-Encoder with Contrastive Learning + ADAPT
+bi_encoder:
+  model_name: "bkai-foundation-models/vietnamese-bi-encoder"  # Vietnamese-specific bi-encoder
+  enhancement_techniques:
+    contrastive_learning:
+      enabled: true
+      loss_type: "TripletLoss"
+      max_length: 256
+      batch_size: 16
+      epochs: 5
+    adapt:
+      enabled: true
+      domain_data_ratio: 0.8
+      adaptation_steps: 1000
+      learning_rate: 2e-5
+      warmup_steps: 100
+      hard_negative_mining: true  # Enable HNM for Tier 1
+  training_params:
+    batch_size: 32
+    max_length: 256
+    epochs: 3
+    learning_rate: 0.00002  # 2e-5
+    warmup_steps: 100
+    weight_decay: 0.01
+
+# Enhanced reranker pipeline với proper architecture
+reranker_pipeline:
+  combined_reranker:
+    enabled: true
+    ensemble_method: "weighted_average"
+    enhancement_strategy: "ADAPT-enhanced from Tier 2 + Base model ensemble"
+    models:
+      adapt_enhanced_phobert_base_v2:
+        enabled: true
+        weight: 0.7  # 70% contribution - ADAPT-enhanced từ Tier 2
+        model_name: "vinai/phobert-base-v2"
+        max_length: 256
+        enhancement: "ADAPT-enhanced từ Tier 2 Light Reranker training"
+        purpose: "Legal domain expertise với optimized performance từ Tier 2"
+        status: "Fine-tuned với ADAPT từ Tier 2 + HPO + HNM"
+        source: "Tier 2 ADAPT-enhanced model"
+      base_phobert_large:
+        enabled: true
+        weight: 0.3  # 30% contribution - base model gốc
+        model_name: "vinai/phobert-large"
+        max_length: 512
+        enhancement: "Base model gốc chưa fine-tune"
+        purpose: "High quality general performance"
+        status: "Original pre-trained model"
+    top_k: 20
+    performance_balance: "70% domain expertise (ADAPT từ Tier 2) + 30% general quality (base)"
+    ensemble_strategy: "Domain expertise từ Tier 2 + General quality balance"
+    techniques: ["HPO", "Hard Negative Mining", "Ensemble training"]
+  
+  # Legacy support (deprecated, use combined_reranker instead)
+  cross_encoder:
+    enabled: true  # Enable cross encoder with combined reranker
+    top_k: 20
+    model_name: "vinai/phobert-large"
+    max_length: 256
+    weight: 0.3
+  light_reranker:
+    enabled: true
+    top_k: 80
+    model_name: "vinai/phobert-base-v2"  # Independent ADAPT training on PhoBERT-base-v2
+    max_length: 256
+    weight: 0.7
+    enhancement: "Independent ADAPT training on PhoBERT-base-v2 + HPO + HNM"
+    purpose: "Fast filtering with independent domain expertise (PhoBERT uses ADAPT training)"
+    techniques: ["HPO", "Hard Negative Mining", "Independent ADAPT training"]
+    model_source: "PhoBERT-base-v2 (independent ADAPT training)"
+    architecture_note: "Tier 2 is independent from Tier 1 - PhoBERT uses ADAPT training separately"
+
+# HPO Configuration
+hyperparameter_optimization:
+  enabled: true
+  framework: "optuna"
+  bi_encoder:
+    n_trials: 20
+    parameters:
+      - learning_rate
+      - batch_size
+      - epochs
+      - warmup_steps
+      - weight_decay
+      - max_length
+      - embedding_dim
+      - margin
+      - distance_metric
+      - domain_data_ratio
+      - adaptation_steps
+  light_ranking:
+    n_trials: 15
+    parameters:
+      - learning_rate
+      - batch_size
+      - epochs
+      - warmup_steps
+      - weight_decay
+      - max_length
+      - dropout
+  combined_reranker:
+    n_trials: 25
+    parameters:
+      - learning_rate
+      - batch_size
+      - epochs
+      - warmup_steps
+      - weight_decay
+      - max_length
+      - dropout
+      - gradient_accumulation_steps
+      - adapt_enhanced_weight
+      - base_model_weight
+      - ensemble_temperature
+      - adapt_confidence_boost
+
+app:
+  # Tối ưu hóa F1: Tăng candidate pool để tăng Recall
+  top_k_retrieval: 10      # Tăng từ 100 → 150 (+50%) để tăng Recall
+  top_k_light: 80          # Tăng từ 80 → 120 (+50%) để tăng Recall
+  top_k_final: 5            # Giảm từ 30 → 5 để phù hợp với nhu cầu thực tế (3-5 kết quả)
+  
+  # HOÀN TRẢ về ban đầu: KHÔNG có threshold filtering
+  # retrieval_threshold: 0.15   # LOẠI BỎ
+  # light_reranker_threshold: 0.10  # LOẠI BỎ
+  # cross_encoder_threshold: 0.05   # LOẠI BỎ
+  
+  cache_questions_ttl_seconds: 3600
+  cache_pipeline_ttl_seconds: 7200
+  reranker_weights:
+    adapt_enhanced_phobert_base_v2: 0.7
+    base_phobert_large: 0.3
+
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  max_size_mb: 5
+  backup_count: 2
+  console_level: "INFO"
+  file_level: "INFO"
+
+# Pipeline Configuration
+pipeline:
+  version: "8.3"
+  architecture: "3-tier"
+  enhancement_strategy: "Vietnamese-Bi-Encoder + Contrastive Learning + ADAPT + HPO + HNM"
+  tiers:
+    tier_1:
+      name: "Vietnamese-Bi-Encoder + FAISS"
+      purpose: "Fast retrieval với Vietnamese domain expertise"
+      techniques: ["Contrastive Learning", "ADAPT", "HPO", "HNM"]
+      performance: "~1000+ docs/second"
+      enhancement: "Vietnamese-bi-encoder + Contrastive Learning unsupervised + ADAPT domain adaptation + Hard Negative Mining"
+      base_model: "bkai-foundation-models/vietnamese-bi-encoder"
+      independence: "Independent training - no inheritance to other tiers"
+    tier_2:
+      name: "Light Reranker"
+      purpose: "Fast filtering với independent domain expertise"
+      techniques: ["HPO", "HNM", "Independent ADAPT"]
+      performance: "~500+ docs/second"
+      enhancement: "PhoBERT-base-v2 + Independent ADAPT training + HPO optimization + Hard Negative Mining"
+      base_model: "vinai/phobert-base-v2"
+      independence: "Independent from Tier 1 - PhoBERT uses ADAPT training separately"
+    tier_3:
+      name: "Cross-Encoder Ensemble"
+      purpose: "Final ranking với domain expertise + general quality balance"
+      techniques: ["HPO", "HNM", "Ensemble", "ADAPT-enhanced inheritance"]
+      performance: "~100+ docs/second"
+      enhancement: "Ensemble (ADAPT-enhanced PhoBERT-base-v2 từ Tier 2 + ADAPT-enhanced PhoBERT-large) + HPO + HNM"
+      base_models: ["ADAPT-enhanced PhoBERT-base-v2 từ Tier 2", "ADAPT-enhanced PhoBERT-large"]
+      independence: "Inherits ADAPT-enhanced model from Tier 2 for domain expertise"
