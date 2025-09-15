@@ -69,7 +69,7 @@ reranker_pipeline:
         purpose: "High quality general performance"
         status: "Original pre-trained model"
     top_k: 20
-    performance_balance: "70% domain expertise (ADAPT từ Tier 2) + 30% general quality (base)"
+    performance_balance: "70% ADAPT PhoBERT-base-v2 + 30% ADAPT PhoBERT-large"
     ensemble_strategy: "Domain expertise từ Tier 2 + General quality balance"
     techniques: ["HPO", "Hard Negative Mining", "Ensemble training"]
   

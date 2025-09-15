@@ -166,11 +166,13 @@ def _safe_move_to_device(model, device):
 ```
 
 **🔑 Đặc điểm chính của kiến trúc v8.3:**
-- **Independent Training**: Mỗi tier được train độc lập, không kế thừa weights
-- **Safe Device Handling**: Meta tensor handling với `_safe_move_to_device()`
+- **Mixed Training Strategy**: Tier 1 & 2 independent, Tier 3 inherits ADAPT-enhanced model từ Tier 2
+- **Model Inheritance**: Tier 3 Cross-Encoder sử dụng ADAPT-enhanced PhoBERT-base-v2 từ Tier 2 Light Reranker
+- **Safe Device Handling**: Meta tensor handling với `_safe_move_to_device()` và offloaded model support
 - **Lazy Loading**: Tránh circular import với dynamic page loading
 - **Form-based UI**: Ngăn auto-rerun với `st.form` controls
-- **Centralized Config**: Tất cả config từ `config/default.yml`
+- **Centralized Config**: Tất cả config từ `config/default.yml` với dynamic path discovery
+- **Error Recovery**: Multiple fallback strategies cho model loading và graceful degradation
 
 ### 1.3 Cấu trúc thư mục dự án
 
@@ -269,11 +271,12 @@ User Query → Web Interface → Pipeline Orchestrator → 3-Tier Processing →
 
 **Các giai đoạn chính:**
 1. **Input Processing**: Người dùng nhập câu hỏi qua giao diện web
-2. **Pipeline Orchestration**: Hệ thống điều phối xử lý qua 3 tầng
-3. **Multi-tier Processing**: Xử lý tuần tự qua retrieval, light reranking, và cross-encoder
-4. **Score Aggregation**: Tổng hợp điểm số từ các tầng
-5. **Result Ranking**: Sắp xếp kết quả theo điểm số cuối cùng
-6. **Output Display**: Hiển thị kết quả với giao diện tương tác
+2. **Pipeline Orchestration**: Hệ thống điều phối xử lý qua 3 tầng với dependency validation
+3. **Multi-tier Processing**: Xử lý tuần tự qua retrieval, light reranking, và cross-encoder ensemble
+4. **Model Inheritance**: Tier 3 sử dụng ADAPT-enhanced model từ Tier 2 Light Reranker
+5. **Score Aggregation**: Tổng hợp điểm số từ các tầng với ensemble strategy
+6. **Result Ranking**: Sắp xếp kết quả theo điểm số cuối cùng
+7. **Output Display**: Hiển thị kết quả với giao diện tương tác
 
 ---
 
@@ -281,7 +284,7 @@ User Query → Web Interface → Pipeline Orchestrator → 3-Tier Processing →
 
 ### 2.1 Tổng quan kiến trúc 3 tầng
 
-Kiến trúc 3 tầng của LawBot v8.3 được thiết kế để tối ưu hóa hiệu suất và độ chính xác, với mỗi tầng được **train độc lập** và thực hiện một nhiệm vụ cụ thể:
+Kiến trúc 3 tầng của LawBot v8.3 được thiết kế để tối ưu hóa hiệu suất và độ chính xác, với **mixed training strategy**: Tier 1 & 2 được train độc lập, Tier 3 kế thừa ADAPT-enhanced model từ Tier 2:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -321,7 +324,7 @@ Kiến trúc 3 tầng của LawBot v8.3 được thiết kế để tối ưu h�
                       ↓
 ┌─────────────────────────────────────────────────────────────────┐
 │  🔄 SCORE AGGREGATION & FINAL RANKING                          │
-│  ├── Weighted combination: 70% Tier 2 + 30% Base model       │
+│  ├── Weighted combination: 70% ADAPT PhoBERT-base-v2 + 30% ADAPT PhoBERT-large │
 │  ├── Final score calculation với ensemble weights             │
 │  ├── Result ranking theo final scores                         │
 │  └── Output formatting với metadata                           │
@@ -337,7 +340,7 @@ Kiến trúc 3 tầng của LawBot v8.3 được thiết kế để tối ưu h�
 - **ADAPT Enhancement**: Domain adaptation cho pháp luật Việt Nam
 - **Safe Device Handling**: Meta tensor support với `_safe_move_to_device()`
 - **Centralized Config**: Tất cả config từ `config/default.yml`
-- **Ensemble Strategy**: 70% domain expertise + 30% general quality
+- **Ensemble Strategy**: 70% ADAPT PhoBERT-base-v2 + 30% ADAPT PhoBERT-large
 
 ### 2.2 Chi tiết từng tầng
 
@@ -507,7 +510,7 @@ class RerankingEngine:
 
 **Kỹ thuật sử dụng:**
 - **Ensemble Strategy**: Kết hợp PhoBERT-base-v2 ADAPT + PhoBERT-large ADAPT
-- **Weighted Combination**: 70% PhoBERT-base-v2 ADAPT + 30% PhoBERT-large ADAPT
+- **Weighted Combination**: 70% ADAPT PhoBERT-base-v2 + 30% ADAPT PhoBERT-large
 - **HPO**: Hyperparameter optimization với Optuna integration
 - **HNM**: Hard negative mining với adaptive threshold
 - **Performance Optimization**: HPO optimization với Optuna
@@ -1335,7 +1338,7 @@ class ComprehensiveEvaluator:
 **Mục đích:** Tạo ensemble model kết hợp PhoBERT-base-v2 ADAPT và PhoBERT-large ADAPT
 
 **Kỹ thuật sử dụng:**
-- **Ensemble Strategy**: Weighted combination (70% PhoBERT-base-v2 ADAPT + 30% PhoBERT-large ADAPT)
+- **Ensemble Strategy**: Weighted combination (70% ADAPT PhoBERT-base-v2 + 30% ADAPT PhoBERT-large)
 - **Model Integration**: PhoBERT-base-v2 (ADAPT) + PhoBERT-large (ADAPT)
 - **HPO**: Hyperparameter optimization cho ensemble weights
 - **HNM**: Hard negative mining
@@ -3633,7 +3636,7 @@ reranker_pipeline:
         purpose: "High quality general performance"
         status: "Original pre-trained model"
     top_k: 20
-    performance_balance: "70% domain expertise (ADAPT từ Tier 2) + 30% general quality (base)"
+    performance_balance: "70% ADAPT PhoBERT-base-v2 + 30% ADAPT PhoBERT-large"
     ensemble_strategy: "Domain expertise từ Tier 2 + General quality balance"
     techniques: ["HPO", "Hard Negative Mining", "Ensemble training"]
 
@@ -6677,7 +6680,7 @@ def rank_cross(self, query: str, documents: List[Dict[str, Any]]) -> List[Dict[s
 # Cross-encoder process:
 # Input: Top 80 documents từ Tier 2
 # 1. Tạo query-document pairs
-# 2. Encode với ensemble model (70% ADAPT + 30% Base)
+# 2. Encode với ensemble model (70% ADAPT PhoBERT-base-v2 + 30% ADAPT PhoBERT-large)
 # 3. Get regression scores
 # 4. Sort documents by final scores
 # Output: Top 10 documents với cross-encoder scores
@@ -8858,7 +8861,7 @@ class AdaptiveHardNegativeMining:
 
 **Ensemble Strategy:**
 - **Model Combination**: Weighted combination của multiple models
-- **Performance Optimization**: 70% ADAPT-enhanced + 30% Base model
+- **Performance Optimization**: 70% ADAPT PhoBERT-base-v2 + 30% ADAPT PhoBERT-large
 - **Score Aggregation**: Intelligent score combination
 - **Confidence Scoring**: Confidence-based weighting
 
@@ -8898,6 +8901,10 @@ class AdaptiveHardNegativeMining:
    - **Quality Score Logic**: Tier-specific thresholds với adjusted scoring
    - **Performance Analysis**: Real-time monitoring và automated optimization
    - **Comprehensive Evaluation**: Multi-tier evaluation với unified reporting
+   - **Device Management**: Safe device handling với `_safe_move_to_device()` cho meta tensors và offloaded models
+   - **Error Recovery**: Multiple fallback strategies cho model loading và graceful degradation
+   - **Model Inheritance**: Tier 3 Cross-Encoder inherits ADAPT-enhanced model từ Tier 2 Light Reranker
+- **Single ADAPT**: Chỉ PhoBERT-base-v2 có ADAPT (từ Tier 2), PhoBERT-large là base model
 
 3. **`LAWBOT_UI_TECHNICAL_GUIDE.md`** - Hướng dẫn kiến trúc UI
    - **Streamlit Architecture**: Modular page system với custom navigation
@@ -9056,7 +9063,7 @@ complexity_analysis = {
    - **ADAPT Enhancement**: Dual model domain adaptation (PhoBERT-base-v2 + PhoBERT-large)
    - **HNM Enhancement**: Hard negative mining cho improved training data quality
    - **HPO Enhancement**: Hyperparameter optimization cho optimal ensemble performance
-   - **Ensemble Strategy**: Weighted combination (70% base + 30% large) với confidence calibration
+   - **Ensemble Strategy**: Weighted combination (70% ADAPT PhoBERT-base-v2 + 30% ADAPT PhoBERT-large) với confidence calibration
 
 2. **MLOPs techniques tiên tiến:**
    - **FAISS Vector Search**: Approximate nearest neighbor với optimization

@@ -342,7 +342,7 @@ def main():
                     "Số kết quả cuối cùng:",
                     min_value=1,
                     max_value=20,
-                    value=st.session_state.get("final_results_count", 5),
+                    value=st.session_state.get("final_results_count", 3),
                     help="Số kết quả cuối cùng sẽ hiển thị",
                     key="final_results_slider",
                 )
@@ -367,10 +367,12 @@ def main():
 
                 # Apply configuration button
                 if st.form_submit_button("✅ Áp dụng cấu hình"):
+                    # Save form values to session state
                     st.session_state.final_results_count = final_results_count
                     st.session_state.search_aggressiveness = search_aggressiveness
                     st.session_state.force_cpu = force_cpu
                     st.success("✅ Cấu hình đã được áp dụng!")
+                    st.rerun()  # Force rerun to update UI
 
             # Display current configuration
             if force_cpu:
@@ -459,15 +461,19 @@ def main():
                     st.session_state.last_query = query
                     logger.info(f"Processing query: {query[:100]}...")
                     try:
-                        # Get parameters from session state or use defaults
-                        final_results_count = st.session_state.get("final_results_count", 5)
-                        search_aggressiveness = st.session_state.get("search_aggressiveness", "Balanced")
+                        # Get parameters from form values (not session state)
+                        final_results_count = st.session_state.final_results_slider
+                        search_aggressiveness = st.session_state.aggressiveness_select
+                        
+                        # Debug logging
+                        logger.info(f"🔍 Search parameters: final_results_count={final_results_count}, search_aggressiveness={search_aggressiveness}")
                         
                         # Calculate optimal parameters
                         params = calculate_optimal_parameters(
                             final_results_count, search_aggressiveness
                         )
-                        logger.info(f"Search parameters: {params}")
+                        logger.info(f"🔧 Calculated search parameters: {params}")
+                        logger.info(f"🔧 Pipeline will use top_k={params['top_k_final']} for final results")
 
                         # Display calculated parameters
                         with st.expander("📊 Thông số tìm kiếm được tính toán tự động"):
@@ -500,6 +506,14 @@ def main():
                         if results:
                             # Display performance metrics - simple styling
                             display_performance_metrics(start_time, end_time, len(results))
+                            
+                            # Debug: Show actual vs expected results
+                            expected_results = params["top_k_final"]
+                            actual_results = len(results)
+                            if actual_results != expected_results:
+                                st.warning(f"⚠️ Debug: Expected {expected_results} results, got {actual_results} results")
+                            else:
+                                st.success(f"✅ Debug: Got exactly {actual_results} results as expected")
 
                             # Results display section
                             st.markdown("---")

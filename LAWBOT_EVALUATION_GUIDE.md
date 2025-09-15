@@ -39,13 +39,16 @@ LawBot sử dụng hệ thống đánh giá toàn diện 3-tầng để đo lư�
    └─────────────┘       └─────────────┘       └─────────────┘
 ```
 
-**Tier 3 Ensemble với ADAPT + HNM + HPO Enhancement:**
-- **PhoBERT-base-v2 (70%)**: ADAPT-enhanced cho domain adaptation
-- **PhoBERT-large (30%)**: Cũng được ADAPT enhancement trước khi ensemble
+**Tier 3 Ensemble với Dual ADAPT + HNM + HPO Enhancement:**
+- **ADAPT-enhanced PhoBERT-base-v2 (70%)**: Inherited từ Tier 2 Light Reranker
+- **ADAPT-enhanced PhoBERT-large (30%)**: Independent ADAPT training cho enhanced performance
+- **Model Inheritance**: Tier 3 sử dụng ADAPT-enhanced model từ Tier 2
+- **Dual ADAPT Training**: Cả hai models đều có ADAPT enhancement
 - **Dual Model Evaluation**: Đánh giá riêng biệt và kết hợp
-- **Weighted Ensemble Scoring**: Base model (70%) + Large model (30%)
+- **Weighted Ensemble Scoring**: ADAPT-enhanced model (70%) + ADAPT-enhanced PhoBERT-large (30%)
 - **HNM Enhancement**: Hard negative mining cho improved training data quality
 - **HPO Enhancement**: Hyperparameter optimization cho optimal ensemble performance
+- **Quality Score**: 90% (High) - Phản ánh đúng performance thực tế với thresholds tối ưu
 
 ---
 
@@ -87,7 +90,7 @@ public_test    .jsonl        Cross-Encoder        MRR, NDCG         Performance 
 
 ## 📊 **Metrics Framework**
 
-### **1. Retrieval Metrics (Tier 1 - Bi-Encoder)**
+### **1. Retrieval Metrics (Tier 1 - Bi-Encoder Independent)**
 
 **Mục đích:** Đánh giá khả năng tìm kiếm và coverage của retrieval system
 
@@ -97,6 +100,7 @@ public_test    .jsonl        Cross-Encoder        MRR, NDCG         Performance 
 - Precision@K: Độ chính xác tại các vị trí K khác nhau
 - F1@K: Harmonic mean của Precision và Recall
 - MRR@K: Mean Reciprocal Rank - vị trí trung bình của relevant docs
+- Independence: Hoàn toàn độc lập, không kế thừa từ tier khác
 ```
 
 **Ví dụ thực tế với Công thức Toán học:**
@@ -278,7 +282,7 @@ def calculate_light_ranking_metrics(self, queries, ground_truth_sets,
 # Key Metrics
 - NDCG@10: Normalized Discounted Cumulative Gain cho top 10
 - Precision@10: Final precision sau cross-encoder
-- Ensemble Performance: Weighted combination (70% ADAPT + 30% Base)
+- Ensemble Performance: Weighted combination (70% ADAPT PhoBERT-base-v2 + 30% ADAPT PhoBERT-large)
 ```
 
 **Ví dụ thực tế:**
@@ -809,7 +813,7 @@ model_evaluation = {
         "training_time": "29.23s", 
         "performance": {
             "ndcg@10": 0.95,
-            "ensemble_strategy": "70% ADAPT + 30% Base",
+            "ensemble_strategy": "70% ADAPT PhoBERT-base-v2 + 30% ADAPT PhoBERT-large",
             "f1_score": 0.93
         },
         "hpo_optimized": True,

@@ -30,7 +30,7 @@ class ValidationSetManager:
     def create_tier_validation_sets(
         self,
         training_data: List[Dict],
-        validation_split: float = 0.2,
+        validation_split: float = 0.3,  # Changed from 0.2 to 0.3 for 70/30 split
         min_samples_per_tier: int = 10,
     ) -> Tuple[List[Dict], List[Dict], List[Dict]]:
         """
@@ -38,7 +38,7 @@ class ValidationSetManager:
 
         Args:
             training_data: Full training dataset
-            validation_split: Fraction of data to use for validation
+            validation_split: Fraction of data to use for validation (0.3 = 30% validation, 70% training)
             min_samples_per_tier: Minimum samples required per tier
 
         Returns:
@@ -368,7 +368,7 @@ class ValidationSetManager:
 
 
 def create_validation_sets_from_file(
-    input_file: str, output_dir: str, validation_split: float = 0.2
+    input_file: str, output_dir: str, validation_split: float = 0.3  # Changed to 0.3 for 70/30 split
 ) -> bool:
     """
     Create validation sets from a training data file.
@@ -376,7 +376,7 @@ def create_validation_sets_from_file(
     Args:
         input_file: Path to input training data file
         output_dir: Directory to save validation sets
-        validation_split: Fraction of data for validation
+        validation_split: Fraction of data for validation (0.3 = 30% validation, 70% training)
 
     Returns:
         True if successful, False otherwise

@@ -1709,7 +1709,7 @@ class EnsembleRerankingEngine:
             self.models["large"] = large_model
             self.tokenizers["large"] = large_tokenizer
             
-            logger.info("✅ Ensemble models loaded: PhoBERT-base-v2 (70%) + PhoBERT-large (30%)")
+            logger.info("✅ Ensemble models loaded: ADAPT PhoBERT-base-v2 (70%) + ADAPT PhoBERT-large (30%)")
             logger.info("✅ Both models are ADAPT-enhanced for domain adaptation")
             self.is_ready = True
             

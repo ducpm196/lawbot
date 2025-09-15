@@ -2,7 +2,7 @@
   "index_type": "IndexFlatIP",
   "dimension": 768,
   "total_documents": 17989,
-  "bi_encoder_model": "D:\\TTNT\\Project\\LawBot\\models\\bi-encoder_20250908_002654",
+  "bi_encoder_model": "D:\\TTNT\\Project\\LawBot\\models\\bi-encoder_20250915_012843",
   "created_at": "2025-08-16_22:15:00",
   "description": "FAISS index created with trained Bi-Encoder model as part of training pipeline"
 }

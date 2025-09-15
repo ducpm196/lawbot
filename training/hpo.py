@@ -97,7 +97,7 @@ class HyperparameterOptimizer:
                 return 0.0
 
             # Create validation split
-            val_data = self._create_validation_split(train_data, split_ratio=0.2)
+            val_data = self._create_validation_split(train_data, split_ratio=0.3)  # Changed to 0.3 for 70/30 split
 
             # Initialize training engine
             engine = TrainingEngine(
@@ -140,7 +140,7 @@ class HyperparameterOptimizer:
             logger.error(f"Failed to load training data: {e}")
             return []
 
-    def _create_validation_split(self, data: list, split_ratio: float = 0.2) -> list:
+    def _create_validation_split(self, data: list, split_ratio: float = 0.3) -> list:  # Changed to 0.3 for 70/30 split
         """Create validation split from training data."""
         split_idx = int(len(data) * (1 - split_ratio))
         return data[split_idx:]

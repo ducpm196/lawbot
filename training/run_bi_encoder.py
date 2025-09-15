@@ -974,7 +974,7 @@ class BiEncoderTrainer:
                     f.write(json.dumps(item, ensure_ascii=False) + "\n")
 
             validation_success = create_validation_sets_from_file(
-                str(temp_train_file), str(validation_dir), validation_split=0.2
+                str(temp_train_file), str(validation_dir), validation_split=0.3  # Changed to 0.3 for 70/30 split
             )
 
             if validation_success:

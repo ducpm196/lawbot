@@ -464,7 +464,7 @@ class LightRankingTrainer:
             from training.validation_sets import create_validation_sets_from_file
 
             validation_success = create_validation_sets_from_file(
-                str(training_data_path), str(validation_dir), validation_split=0.2
+                str(training_data_path), str(validation_dir), validation_split=0.3  # Changed to 0.3 for 70/30 split
             )
 
             if validation_success:

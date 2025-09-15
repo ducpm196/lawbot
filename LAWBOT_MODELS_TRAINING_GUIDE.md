@@ -19,29 +19,32 @@
 
 ### 1.1 3-Tier Pipeline Overview
 
-LawBot sử dụng kiến trúc 3-tier để tối ưu hóa hiệu suất và độ chính xác:
+LawBot sử dụng kiến trúc 3-tier với **mixed training strategy** để tối ưu hóa hiệu suất và độ chính xác:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                    LAWBOOT 3-TIER ARCHITECTURE                  │
 ├─────────────────────────────────────────────────────────────────┤
-│  🚀 TIER 1: BI-ENCODER RETRIEVAL                              │
+│  🚀 TIER 1: BI-ENCODER RETRIEVAL (INDEPENDENT)               │
 │  ├── Model: Vietnamese Bi-Encoder + Contrastive Learning      │
 │  ├── Purpose: Fast candidate retrieval                         │
 │  ├── Output: Top-K candidates (K=100)                         │
-│  └── Speed: ~10ms per query                                   │
+│  ├── Speed: ~10ms per query                                   │
+│  └── Independence: Hoàn toàn độc lập, không kế thừa          │
 ├─────────────────────────────────────────────────────────────────┤
-│  ⚡ TIER 2: LIGHT RERANKER                                     │
-│  ├── Model: PhoBERT-base-v2 + Independent Training             │
+│  ⚡ TIER 2: LIGHT RERANKER (INDEPENDENT)                      │
+│  ├── Model: PhoBERT-base-v2 + Independent ADAPT Training      │
 │  ├── Purpose: Quick filtering & reranking                      │
-│  ├── Output: Top-20 filtered candidates                       │
-│  └── Speed: ~50ms per query                                   │
+│  ├── Output: Top-20 filtered candidates + ADAPT-enhanced model│
+│  ├── Speed: ~50ms per query                                   │
+│  └── Independence: Hoàn toàn độc lập, output cho Tier 3      │
 ├─────────────────────────────────────────────────────────────────┤
-│  🎯 TIER 3: CROSS-ENCODER ENSEMBLE                            │
-│  ├── Models: PhoBERT-base-v2 + PhoBERT-large + Ensemble       │
-│  ├── Purpose: Precise final ranking                            │
+│  🎯 TIER 3: CROSS-ENCODER ENSEMBLE (INHERITS FROM TIER 2)    │
+│  ├── Models: ADAPT-enhanced PhoBERT-base-v2 + PhoBERT-large   │
+│  ├── Purpose: Precise final ranking với domain expertise      │
 │  ├── Output: Final ranked results                             │
-│  └── Speed: ~200ms per query                                  │
+│  ├── Speed: ~200ms per query                                  │
+│  └── Inheritance: Kế thừa ADAPT-enhanced model từ Tier 2     │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
@@ -49,8 +52,13 @@ LawBot sử dụng kiến trúc 3-tier để tối ưu hóa hiệu suất và đ
 
 ```
 User Query → Tier 1 (Bi-Encoder) → Top-100 Candidates → 
-Tier 2 (Light Reranker) → Top-20 Candidates → 
-Tier 3 (Cross-Encoder) → Final Ranked Results
+Tier 2 (Light Reranker) → Top-20 Candidates + ADAPT-enhanced Model → 
+Tier 3 (Cross-Encoder Ensemble) → Final Ranked Results
+```
+
+**Model Inheritance Flow:**
+```
+Tier 1 (Independent) → Tier 2 (Independent + ADAPT) → Tier 3 (Inherits ADAPT-enhanced model từ Tier 2)
 ```
 
 ### 1.3 Detailed Architecture Diagram
@@ -92,11 +100,12 @@ Tier 3 (Cross-Encoder) → Final Ranked Results
 │  └───────────────────────────────────────────────────────────┘  │
 │  OUTPUT: 20 refined candidates with confidence scores           │
 ├─────────────────────────────────────────────────────────────────┤
-│  🎯 TIER 3: CROSS-ENCODER ENSEMBLE                            │
+│  🎯 TIER 3: CROSS-ENCODER ENSEMBLE (DUAL ADAPT)             │
 │  ┌───────────────────────────────────────────────────────────┐  │
 │  │ Query + 20 Candidates → 20 Query-Passage Pairs            │  │
 │  │           ↓                           ↓                   │  │
-│  │  PhoBERT-base-v2                PhoBERT-large             │  │
+│  │  ADAPT-enhanced PhoBERT-base-v2    ADAPT-enhanced         │  │
+│  │  (Inherited from Tier 2)           PhoBERT-large          │  │
 │  │  [CLS] Q [SEP] P [SEP]          [CLS] Q [SEP] P [SEP]     │  │
 │  │           ↓                           ↓                   │  │
 │  │  Classification Head            Classification Head       │  │
@@ -104,9 +113,9 @@ Tier 3 (Cross-Encoder) → Final Ranked Results
 │  │           ↓                           ↓                   │  │
 │  │  Relevance Prob                 Relevance Prob           │  │
 │  │           ↓                           ↓                   │  │
-│  │           └─── Weighted Ensemble ────┘                    │  │
+│  │           └─── Weighted Ensemble (70% ADAPT + 30% ADAPT) ────┘  │
 │  │                      ↓                                    │  │
-│  │              Final Ranking Scores                         │  │
+│  │              Final Ranking Scores với dual domain expertise│  │
 │  └───────────────────────────────────────────────────────────┘  │
 │  OUTPUT: Top-K final results with confidence                    │
 └─────────────────────────────────────────────────────────────────┘
@@ -939,7 +948,7 @@ Tier 2 (Light Reranker) → ADAPT-enhanced PhoBERT-base-v2
                     Tier 3 Ensemble (70% + 30%)
                     ├── 70%: PhoBERT-base-v2 (ADAPT-enhanced from Tier 2)
                     │   └── Purpose: Legal domain expertise
-                    └── 30%: PhoBERT-large (base model)
+                    └── 30%: PhoBERT-large (ADAPT-enhanced)
                         └── Purpose: General quality balance
 ```
 
@@ -1347,7 +1356,7 @@ reranker_pipeline:
 **Key Implementation Points:**
 1. **Model Loading**: PhoBERT-base-v2 và PhoBERT-large được load riêng biệt
 2. **ADAPT Enhancement**: PhoBERT-base-v2 kế thừa từ Tier 2, PhoBERT-large được apply simple domain fine-tuning
-3. **Ensemble Weights**: 70% (Tier 2 expertise) + 30% (domain adaptation)
+3. **Ensemble Weights**: 70% (ADAPT PhoBERT-base-v2) + 30% (ADAPT PhoBERT-large)
 4. **Training Strategy**: Independent training, ensemble inference
 5. **Configuration**: Centralized config trong `config/default.yml`
 
@@ -1923,7 +1932,7 @@ LawBot Models & Training Guide v8.3 cung cấp **comprehensive documentation** c
 - **Performance Optimization**: Fast filtering với enhanced accuracy
 
 **🎯 Tier 3 (Cross-Encoder Ensemble) - Final Ranking:**
-- **Ensemble Learning** cho Cross-Encoder (70% Tier 2 expertise + 30% domain adaptation)
+- **Ensemble Learning** cho Cross-Encoder (70% ADAPT PhoBERT-base-v2 + 30% ADAPT PhoBERT-large)
 - **ADAPT Enhancement**: Dual model domain adaptation (PhoBERT-base-v2 + PhoBERT-large)
 - **HNM Enhancement**: Hard negative mining cho improved training data quality
 - **HPO Enhancement**: Hyperparameter optimization cho optimal ensemble performance

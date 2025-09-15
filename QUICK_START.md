@@ -54,13 +54,18 @@ python run_workflow.py --preset full --force-restart
 - **Real-data only**: Hệ thống chỉ sử dụng dữ liệu thật được tạo bởi `data_processing/run_preparation.py`
 - **Centralized Path Management**: Tất cả đường dẫn được quản lý tập trung tại `config/paths.py`
 - **Centralized Model Configuration**: Tất cả cấu hình model được quản lý tập trung tại `config/models.py`
-- **Automated Data Discovery**: Hệ thống tự động tìm thư mục processed data mới nhất với timestamp
+- **Automated Data Discovery**: Hệ thống tự động tìm thư mục processed data mới nhất với timestamp qua `find_latest_processed_data_dir()`
 - **Data Freshness Validation**: Workflow tự động kiểm tra tính mới của dữ liệu và re-run `data_preparation` khi cần thiết
+- **Dependency Validation**: Workflow tự động validate dependencies giữa các tiers
+- **Model Inheritance**: Tier 3 Cross-Encoder inherits ADAPT-enhanced model từ Tier 2 Light Reranker
+- **Single ADAPT**: Chỉ PhoBERT-base-v2 có ADAPT (từ Tier 2), PhoBERT-large là base model
 - **Advanced HPO**: Hyperparameter optimization với Optuna và early stopping
 - **Comprehensive Evaluation**: Multi-tier evaluation với precision, recall, F1, NDCG, MRR, quality metrics
 - **Unified Reports Storage**: Consolidated evaluation reports trong single `reports/` directory
-- **Config Optimization**: `top_k_final: 5` phù hợp với yêu cầu 3-5 kết quả cuối cùng
+- **Config Optimization**: `top_k_retrieval: 20`, `top_k_light: 10`, `top_k_final: 5` theo source code thực tế
 - **Quality Score Logic**: Tier-specific thresholds cho từng tier với adjusted scoring
+- **Device Management**: Safe device handling với meta tensor và offloaded model support
+- **Error Recovery**: Multiple fallback strategies cho model loading và graceful degradation
 
 **Các file dữ liệu cần thiết:**
 - `bi_encoder_train.jsonl` (Tier 1)
@@ -335,8 +340,8 @@ export OMP_NUM_THREADS=8
 
 ### **4. Recent Config & Quality Score Updates (2025-08-21)**
 ```bash
-# Kiểm tra config mới
-python -c "from config.loader import config; print('top_k_final:', config.app.top_k_final); print('Expected: 5 (3-5 kết quả cuối cùng)')"
+# Kiểm tra config mới theo source code thực tế
+python -c "from config.loader import config; print('top_k_retrieval:', config.app.top_k_retrieval); print('top_k_light:', config.app.top_k_light); print('top_k_final:', config.app.top_k_final)"
 
 # Test quality score logic mới
 python -c "
@@ -347,10 +352,11 @@ quality = calculate_quality_score(tier1_scores, 3)
 print(f'Tier 1 Quality: {quality:.3f} (Expected: 1.0)')
 "
 
-# Kiểm tra k_values mới
+# Kiểm tra k_values mới và model inheritance
 python -c "
 from app.pages.analysis import run_comprehensive_evaluation
 print('K-values updated to [3, 5, 10] for realistic evaluation')
+print('Model inheritance: Tier 3 inherits ADAPT-enhanced model từ Tier 2')
 "
 ```
 
